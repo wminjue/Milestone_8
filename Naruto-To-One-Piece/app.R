@@ -14,6 +14,8 @@ blear <- read_rds("blear.rds")
 bleap <- read_rds("bleap.rds")
 keroror <- read_rds("keroror.rds")
 kerorop <- read_rds("kerorop.rds")
+totality <- read_rds("totality.rds")
+
 
 anime_names <- c("Naruto", "Bleach", "Gintama", "Fullmetal", "Keroro")
 
@@ -36,7 +38,9 @@ ui <- fluidPage(
       mainPanel(plotOutput("plot1"))
     ),
     tabPanel(
-      "Model Explanations"
+      "Model Explanations",
+      plotOutput("total"),
+      htmlOutput("stats")
     ),
     tabPanel(
       "About",
@@ -163,6 +167,26 @@ server <- function(input, output, session) {
 
   })
   
+  output$stats <- renderUI({
+    HTML("<font size = 4><b> Statistic Model Analysis</font></b> <br>
+    How unusual is flunctuations in popularity within specific major anime franchises?
+    What if the overall popularity trend is actually improving, and thus those spinoffs 
+    that demonstrate a negative trend is unusual? To analyze this, I made a dataset 
+    combining all of the popular anime franchise data to look at overall trends in 
+    popularity over the years. Using the model lm(formula = rank ~ start_date, data = total),
+    I found that the intercept is 5034.3099 -- not a bad starting point given the number of 
+    ranked anime series in the analyzed datasets is over 70,000, showing that even considering
+    lesser known spinoffs, the overall popularity rank of major franchises at its release
+    considering any lifetime depreciation trends is still fairly high. Something I did not 
+    expect, however, was a negative correlation of -0.2237 between start date and popularity,
+    suggesting as the start date grows closer to modern time, audience enthusiasm for spinoff 
+    franchises have increased, leading to higher (or a lower number) popularity rank. This is
+    especially interesting given that I included a episode-based weight on the initial franchise 
+    releases (like the original Naruto series), which significantly drags down the popularity
+    trends by setting a very high (or numerically low) popularity rank at the very beginning.
+    <br>
+         ")})
+  
   url0 <- a("Top Anime List", href = "https://myanimelist.net/topanime.php?type=bypopularity")
 
   output$rsource <- renderUI({
@@ -195,6 +219,9 @@ server <- function(input, output, session) {
   output$plot <- renderPlot(data_input())
   
   output$plot1 <- renderPlot(data_input2())
+  
+  output$total <- renderPlot(totality)
+
 }
 
 shinyApp(ui, server)

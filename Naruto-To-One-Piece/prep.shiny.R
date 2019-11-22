@@ -15,3 +15,4 @@ file_copy("images/bleap.rds", "Naruto-To-One-Piece/bleap.rds")
 file_copy("images/keroror.rds", "Naruto-To-One-Piece/keroror.rds")
 file_copy("images/kerorop.rds", "Naruto-To-One-Piece/kerorop.rds")
 file_copy("images/totality.rds", "Naruto-To-One-Piece/totality.rds")
+

@@ -319,7 +319,7 @@ kerorop <- ggplot(data = masterkeroro, aes(x = start_date, y=actscor)) + geom_po
 write_rds(kerorop, "images/kerorop.rds") 
 ```
 
-```{r binding, include = FALSE}
+```{r binding, echo = FALSE}
 
 #I made a dataset combining all of the popular anime franchise data to look at overall trends in popularity over the years -- maybe there is a collective correlation?
 
