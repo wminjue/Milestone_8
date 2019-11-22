@@ -4,6 +4,10 @@ library(readr)
 library(dplyr)
 library(tidyverse)
 
+#Read in all of my graphs from the prep shiny so I can display them in the tabs more easily.
+#I want to figure out how to do the ggplots on my app.R in the future to save on
+#code and space
+
 narr <- read_rds("narr.rds")
 narp <- read_rds("narp.rds")
 gintamr <- read_rds("gintamr.rds")
@@ -16,8 +20,17 @@ keroror <- read_rds("keroror.rds")
 kerorop <- read_rds("kerorop.rds")
 totality <- read_rds("totality.rds")
 
+#Create list of anime for users to scroll through on the first tab
 
 anime_names <- c("Naruto", "Bleach", "Gintama", "Fullmetal", "Keroro")
+
+#Provide two scrolls on the front page so people can cross compare
+#popularity and rank trends between different popular anime simultaneously,
+#instead of clicking back and forth across a faceted graph
+
+#Provided separate statistical modeling combining all the datasets
+#on second tab to show overall trends and ues as a baseline to point
+#out deviations on the first tab
 
 ui <- fluidPage(
   useShinyjs(),
@@ -55,6 +68,10 @@ ui <- fluidPage(
     )
   )
 )
+
+#connected all the menu selection choices with their respective rds files
+#I feel like my current formatting is clunky — going to try to figure out how to
+#make it more aesthetically pleasing for my final presentation
 
 server <- function(input, output, session) {
   
