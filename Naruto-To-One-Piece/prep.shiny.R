@@ -3,6 +3,7 @@ library(ggplot2)
 library(sf)
 library(fs)
 
+#Copy all rds image files into the Shiny folder for direct access
 
 file_copy("images/narr.rds", "Naruto-To-One-Piece/narr.rds")
 file_copy("images/narp.rds", "Naruto-To-One-Piece/narp.rds")
