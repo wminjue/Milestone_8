@@ -5,6 +5,17 @@ library(dplyr)
 library(tidyverse)
 
 narr <- read_rds("narr.rds")
+narp <- read_rds("narp.rds")
+gintamr <- read_rds("gintamr.rds")
+gintamp <- read_rds("gintamp.rds")
+fmar <- read_rds("fmar.rds")
+fmap <- read_rds("fmap.rds")
+blear <- read_rds("blear.rds")
+bleap <- read_rds("bleap.rds")
+keroror <- read_rds("keroror.rds")
+kerorop <- read_rds("kerorop.rds")
+
+anime_names <- c("Naruto", "Bleach", "Gintama", "Fullmetal", "Keroro")
 
 ui <- fluidPage(
   useShinyjs(),
@@ -12,7 +23,12 @@ ui <- fluidPage(
     "From Naruto to One Piece: Rise of Anime",
     tabPanel(
       "Ranking and Popularity Trends",
-      plotOutput("followers")
+      titlePanel("Plotted Score Correlations"),
+      br(),
+      sidebarPanel((
+        selectInput("anime", "Anime", anime_names))
+      ),
+      mainPanel(plotOutput("plot"))
     ),
     tabPanel(
       "Model Explanations"
@@ -31,8 +47,18 @@ ui <- fluidPage(
   )
 )
 
-
 server <- function(input, output, session) {
+  
+  data_input <- reactive({
+    switch(input$anime,
+           "Naruto" = narr, 
+           "Bleach" = blear,
+           "Gintama" = gintamr,
+           "Fullmetal" = fmar,
+           "Keroro" = keroror
+    )
+    
+  })
   
   output$intro <- renderUI({
     HTML("<b><font size=6> Anime: Rise of a Global Phenomenon</font></b>
@@ -125,7 +151,7 @@ server <- function(input, output, session) {
   
   
   output$bio <- renderUI({
-    HTML("<br> <b> <font size=4>About Me:</font></b>
+    HTML("<br> <b> <font size=4>About Me</font></b><br>
                             My name is Minjue Wu and I am a sophomore at Harvard College studying History of
                             Science and Music with a secondary in Global Health and Health Policy. I was born in China and raised on a healthy diet of 
                              Asian animated shows, many of which are imported from Japan, and I am fascinated by the trends and evolution of these
@@ -133,7 +159,8 @@ server <- function(input, output, session) {
          <br> <br>")
   })
   
-  output$followers <- renderPlot(narr)
+  output$plot <- renderPlot(data_input())
 }
 
 shinyApp(ui, server)
+

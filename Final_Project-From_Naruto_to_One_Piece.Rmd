@@ -104,7 +104,7 @@ masternar$actscor <- ifelse(
 
 ```{r narutorun, echo= FALSE, message= FALSE}
 
-#I create a line plot of the change in overall rank and the score of Naruto productions from the start of the franchise until 2016. I started out with a geom_line() plot, but it look too jagged and distracted from seeing overall trends, so I switched to smooth lines. I plotted a scatterplot of the rank and score over time, adjusting size based on how many members voted to track the size of the audience with each franchise. To fit both rank and score on the same scale, I divided rank by 1000 (since most of the later Naruto productions were in the 3000-4000). 
+#I create a line plot of the change in overall rank and the score of Naruto productions from the start of the franchise until 2016. I started out with a geom_line() plot, but it look too jagged and distracted from seeing overall trends, so I switched to smooth lines. I plotted a scatterplot of the rank and score over time, adjusting size based on how many members voted to track the size of the audience with each franchise. 
 
 narr <- ggplot(data = masternar, aes(x= start_date, y=actscor)) + ylim(0, 10) + geom_point(aes(x = start_date, y = actscor, color = "Score (1-10 Scale)", size = actmem)) + geom_smooth(method = "lm", aes(x = start_date, y = actscor, color = "Score (1-10 Scale)")) + labs(size = "Number of Users Providing Feedback", color = "Anime Metric", x = "Year of Anime Release", y = "Score out of 10", title = "Change in Rank of Franchise Anime Productions", subtitle = "Based on Compiled User Feedback on MyAnimeList from 2016-2017") 
 
@@ -134,7 +134,7 @@ Major thanks to Canggih P Wibowo, CooperUnion, and MyAnimeList for compiling the
 
 A link to the Github repository can be found [here]("https://github.com/wminjue/Milestone_5.git").
 
-```{r bleach, echo = FALSE}
+```{r bleach, echo = FALSE, include= FALSE}
 
 #Similar process for Bleach
 
@@ -170,7 +170,7 @@ masterblea$actscor <- ifelse(
 masterblea
 ```
 
-```{r bleachrun, echo= FALSE, message= FALSE}
+```{r bleachrun, echo= FALSE, message= FALSE, include= FALSE}
 blear <- ggplot(data = masterblea, aes(x= start_date, y=actscor)) + ylim(0, 10) + geom_point(aes(x = start_date, y = actscor, color = "Score (1-10 Scale)", size = actmem)) + geom_smooth(method = "lm", aes(x = start_date, y = actscor, color = "Score (1-10 Scale)")) + labs(size = "Number of Users Providing Feedback", color = "Anime Metric", x = "Year of Anime Release", y = "Score out of 10", title = "Change in Rank of Franchise Anime Productions", subtitle = "Based on Compiled User Feedback on MyAnimeList from 2016-2017") 
 
 write_rds(blear, "images/blear.rds")
@@ -180,7 +180,7 @@ bleap <- ggplot(data = masterblea, aes(x = start_date, y=actscor)) + geom_point(
 write_rds(bleap, "images/bleap.rds")
 ```
 
-```{r gintama, echo = FALSE}
+```{r gintama, echo = FALSE, message= FALSE, include= FALSE}
 # Similar for Gin Tama
 gintam <- comments %>%
   select(name, episodes, rating, members) %>%
@@ -216,7 +216,7 @@ mastergintam$actscor <- ifelse(
 mastergintam
 ```
 
-```{r ginrun, echo= FALSE, message= FALSE}
+```{r ginrun, echo= FALSE, message= FALSE, include= FALSE}
 gintamr <- ggplot(data = mastergintam, aes(x= start_date, y=actscor)) + ylim(0, 10) + geom_point(aes(x = start_date, y = actscor, color = "Score (1-10 Scale)", size = actmem)) + geom_smooth(method = "lm", aes(x = start_date, y = actscor, color = "Score (1-10 Scale)")) + labs(size = "Number of Users Providing Feedback", color = "Anime Metric", x = "Year of Anime Release", y = "Score out of 10", title = "Change in Rank of Franchise Anime Productions", subtitle = "Based on Compiled User Feedback on MyAnimeList from 2016-2017") 
 
 write_rds(gintamr, "images/gintamr.rds")
@@ -226,7 +226,7 @@ gintamp <- ggplot(data = mastergintam, aes(x = start_date, y=actscor)) + geom_po
 write_rds(gintamp, "images/gintamp.rds") 
 ```
 
-```{r fma, echo = FALSE}
+```{r fma, echo = FALSE, message= FALSE, include= FALSE}
 # Similar for Gin Tama
 fma <- comments %>%
   select(name, episodes, rating, members) %>%
@@ -262,7 +262,7 @@ masterfma$actscor <- ifelse(
 masterfma
 ```
 
-```{r fmarun, echo= FALSE, message= FALSE}
+```{r fmarun, echo= FALSE, message= FALSE, include= FALSE}
 fmar <- ggplot(data = masterfma, aes(x= start_date, y=actscor)) + ylim(0, 10) + geom_point(aes(x = start_date, y = actscor, color = "Score (1-10 Scale)", size = actmem)) + geom_smooth(method = "lm", aes(x = start_date, y = actscor, color = "Score (1-10 Scale)")) + labs(size = "Number of Users Providing Feedback", color = "Anime Metric", x = "Year of Anime Release", y = "Score out of 10", title = "Change in Rank of Franchise Anime Productions", subtitle = "Based on Compiled User Feedback on MyAnimeList from 2016-2017") 
 
 write_rds(fmar, "images/fmar.rds")
@@ -270,4 +270,51 @@ write_rds(fmar, "images/fmar.rds")
 fmap <- ggplot(data = masterfma, aes(x = start_date, y=actscor)) + geom_point(aes(x = start_date, y = rank, color = "Popularity", size = actmem)) + geom_smooth(method = "lm", aes(x = start_date, y = rank, color = "Popularity"))  + labs(size = "Number of Users Providing Feedback", color = "Anime Metric", x = "Year of Anime Release", y = "Rank and Popularity", title = "Change in Rank and Popularity of Franchise Anime Productions", subtitle = "Based on Compiled User Feedback on MyAnimeList from 2016-2017") 
 
 write_rds(fmap, "images/fmap.rds") 
+```
+
+
+```{r keroro, echo = FALSE, message= FALSE, include= FALSE}
+# Similar for Gin Tama
+keroro <- comments %>%
+  select(name, episodes, rating, members) %>%
+  dplyr::filter(grepl('Keroro', name))
+
+
+rawanimkeroro <- rawanim %>%
+  dplyr::filter(grepl('Keroro', name)) %>%
+  distinct(name, .keep_all = TRUE) %>%
+  select(name, episodes, start_date, score, scored_by, rank, popularity)
+
+
+masterkeroro <- merge(keroro, rawanimkeroro, by.rawanimkeroro = "name") %>%
+  arrange(start_date)
+
+
+masterkeroro$actmem <- ifelse(
+  (
+    (masterkeroro$scored_by > masterkeroro$members)
+  ),
+  masterkeroro$scored_by,
+  masterkeroro$members
+)
+
+masterkeroro$actscor <- ifelse(
+  (
+    (masterkeroro$scored_by > masterkeroro$members)
+  ),
+  masterkeroro$score,
+  masterkeroro$rating
+)
+
+masterkeroro
+```
+
+```{r kerororun, echo= FALSE, include= FALSE}
+keroror <- ggplot(data = masterkeroro, aes(x= start_date, y=actscor)) + ylim(0, 10) + geom_point(aes(x = start_date, y = actscor, color = "Score (1-10 Scale)", size = actmem)) + geom_smooth(method = "lm", aes(x = start_date, y = actscor, color = "Score (1-10 Scale)")) + labs(size = "Number of Users Providing Feedback", color = "Anime Metric", x = "Year of Anime Release", y = "Score out of 10", title = "Change in Rank of Franchise Anime Productions", subtitle = "Based on Compiled User Feedback on MyAnimeList from 2016-2017") 
+
+write_rds(keroror, "images/keroror.rds")
+
+kerorop <- ggplot(data = masterkeroro, aes(x = start_date, y=actscor)) + geom_point(aes(x = start_date, y = rank, color = "Popularity", size = actmem)) + geom_smooth(method = "lm", aes(x = start_date, y = rank, color = "Popularity"))  + labs(size = "Number of Users Providing Feedback", color = "Anime Metric", x = "Year of Anime Release", y = "Rank and Popularity", title = "Change in Rank and Popularity of Franchise Anime Productions", subtitle = "Based on Compiled User Feedback on MyAnimeList from 2016-2017") 
+
+write_rds(kerorop, "images/kerorop.rds") 
 ```
