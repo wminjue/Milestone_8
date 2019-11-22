@@ -1,0 +1,273 @@
+---
+title: 'Final Project: From Naruto to One Piece'
+author: "Minjue Wu"
+date: "10/27/2019"
+output: html_document
+---
+
+## Anime: Rise of a Global Phenomenon 
+
+First created in 1917 with propaganda films such as "Momotarō: Umi no Shinpei", Japanese animation (anime) swept the world in the 1980s as a global entertainment phenonemon with the rise of mecha, superhero series, and space operas. As the focus of anime shifted from film studio features such as Akira and Spirited Away, the format of popular anime transformed into increasingly long series consisting of shorter episodes — bite sized-chunks which can be pitched as more accessible, lower commitment, and reduced-stakes trial runs to mold to ever-shifting popular opinion. As of 2014, there are over 58 million hashtags for the topic of "anime", and in 2017 the the anime sector earned over $19 billion USD worldwide. The burning question follows: with such a high following and market shares, which anime series are responsible for bringing in most of the revenue, and how do they manage to successfully (do or they?) captivate audiences over decades of airing? 
+
+## Heavy Hitters Frenzy
+A glance at the Top Anime list on MyAnimeList, a manga/anime social networking and cataloging website with over 120 million visitors per month, reveals the most popular hits are consistently dominated by specific, classic anime shows that have aired hundreds of episodes over years. Fullmetal Alchemist:Brotherhood, for example, the second  64-episode reboot of the original Fullmetal adaptaion, boasts over a million members involved in forums, which doesn't even account for the amount of visiting members who simply leave ratings. This project seeks to analyze trends across years in ranking, popularity, audience size, and overall quality ratings of the 10 most popular long-running (and still running!) anime shows in history. These include Naruto, Bleach, Fullmetal Alchemist, Keroro Gunsō, Gin Tama, One Piece, Detective Conan (Case Closed), Crayon Shin-Chan, Dragon Ball Z, and Sazae-san. Ranging from 120 to over 1600 episodes each, these series and their offshoots have evolved over the past decade, and data gathered from various Anime review sites and new sources give a comprehensive overview of how popular ratings has changed from 2006-2016.
+
+## The More the Merrier...?
+Although the global size of adoring otaku(anime fanatic) populations and never-ceasing news of the next Gin Tama season might seem like concrete assurance of these anime series' longstanding welcome, capturing tantalizing original content is a precarious struggle. Take these recent Naruto reviews from [Kotaku Australia](https://www.kotaku.com.au/2014/11/naruto-is-fun-and-action-filled-but-its-also-repetitive-and-painfully-long/), [Comicbooks](https://comicbook.com/anime/2019/03/13/overrated-anime-list-ranked/), and [IGN](https://www.ign.com/articles/2016/02/10/naruto-shippuden-ultimate-ninja-storm-review), for example. With well over 500 episodes in the original franchise alone, this well-established ninja adventure series is now on its second generation — literally — as the last 126 episodes follow Naruto's son Boruto, who now carries his father's mantle. However, there is only so much one can do within the same worldbuilding parameters of a small ninja village before episodes start to cycle old themes, fight sequences, and dialogue. Die-hard fans who have suffered through the entire series specifically square off hundreds of episodes as to-be-avoided "filler" fluff to newcomers, and a sizable portion of episode reviews feature negative commentary such as "repetitive...poor AI", "painfully long", and "overrated". 
+
+## A Tide in Marketing Winds
+Here is where analysis of anime trends over release years come into light. A quick comparison of audience following and preferences of the same franchise over many years allows one to pinpoint when an audience tires from content, the effectiveness of new spinoffs, and hidden details about how much future productions of a show is worth investing in. Looking at this graph of Naruto franchise productions by release date, for example, shows that scores of Naruto productions initally dipped in the late 2000s but is steadily increasing, while the overall rank has decreased when compared to all other anime productions. The more recent productions are attracted a smaller group of dedicated fans (as measured by voting users), showing that the nature of the show has perhaps changed — no longer a massive cult following, but something that caters more to a specific group of audiences that have petered off from the original Shippuden series. 
+
+```{r loading, include=FALSE}
+library(lubridate)
+library(ggplot2)
+library(gganimate)
+library(janitor)
+library(animation)
+library(magick)
+library(readxl)
+library(knitr)
+library(tidyverse)
+library(dplyr)
+library(gt)
+library(tidyr)
+
+dir.create("images")
+# Read in informational data about anime productions from the 2019 master data set from Github; save as local file.
+
+rawanim <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-04-23/tidy_anime.csv")
+rawanim <- clean_names(rawanim)
+save(rawanim, file = "data/rawanim.RData")
+
+# Read in informational data about anime recommendations from the 2019 dataset from Anime News Network; save as local file.
+
+news <- readr::read_csv("https://raw.githubusercontent.com/wminjue/Milestone_5/master/data/dataanime.csv")
+news <- clean_names(news)
+save(news, file = "data/dataanime.csv")
+
+# Read in condensed ratings, voting members, and names of anime productions from Kaggle data sets snapping in 2017
+
+comments <- read_csv("data/anime.csv", col_types = cols(
+  anime_id = col_double(),
+  name = col_character(),
+  genre = col_character(),
+  type = col_character(),
+  episodes = col_character(),
+  rating = col_double(),
+  members = col_double()
+))
+
+```
+
+```{r naruto, echo = FALSE}
+
+# Save essential data like # of episodes, rating(on a scale of 1-10), and number of members who voted to create the rating from the smaller 2017 data set as nar
+
+nar <- comments %>%
+  select(name, episodes, rating, members) %>%
+  dplyr::filter(grepl('Naruto', name))
+
+# Select comparitive data from MyAnimeList like # of start date(production release), score(on a scale of 1-10), number of members who voted to create the score, and other metrics like rank and popularity not found in basic nar dataset. Delete duplicates by keeping only distinct names (Naruto for example has a dozen duplicates due to having distinct rows for each genre label)
+
+rawanimnar <- rawanim %>%
+  dplyr::filter(grepl('Naruto', name)) %>%
+  distinct(name, .keep_all = TRUE) %>%
+  select(name, episodes, start_date, score, scored_by, rank, popularity)
+
+# Merge both datasets by the name of anime(taken from rawanim which has a more comprehensive list), and arrange the data by the date of production to better track change over time
+
+masternar <- merge(nar, rawanimnar, by.rawanimnar = "name") %>%
+  arrange(start_date)
+
+#Some of the scores and contributing voting members from the two datasets are not equal, so I created two new columns to take the data with biggest sample size. I created a new row called actmem, which returns the highest "contributing voting member" size from the two data sets. 
+
+masternar$actmem <- ifelse(
+  (
+    (masternar$scored_by > masternar$members)
+  ),
+  masternar$scored_by,
+  masternar$members
+)
+
+#I follow up with another row called actscor to record the corresponding score out of 10 that is from the data set with the highest "contributing voting member" size.
+
+masternar$actscor <- ifelse(
+  (
+    (masternar$scored_by > masternar$members)
+  ),
+  masternar$score,
+  masternar$rating
+)
+```
+
+
+
+```{r narutorun, echo= FALSE, message= FALSE}
+
+#I create a line plot of the change in overall rank and the score of Naruto productions from the start of the franchise until 2016. I started out with a geom_line() plot, but it look too jagged and distracted from seeing overall trends, so I switched to smooth lines. I plotted a scatterplot of the rank and score over time, adjusting size based on how many members voted to track the size of the audience with each franchise. To fit both rank and score on the same scale, I divided rank by 1000 (since most of the later Naruto productions were in the 3000-4000). 
+
+narr <- ggplot(data = masternar, aes(x= start_date, y=actscor)) + ylim(0, 10) + geom_point(aes(x = start_date, y = actscor, color = "Score (1-10 Scale)", size = actmem)) + geom_smooth(method = "lm", aes(x = start_date, y = actscor, color = "Score (1-10 Scale)")) + labs(size = "Number of Users Providing Feedback", color = "Anime Metric", x = "Year of Anime Release", y = "Score out of 10", title = "Change in Rank of Franchise Anime Productions", subtitle = "Based on Compiled User Feedback on MyAnimeList from 2016-2017") 
+
+write_rds(narr, "images/narr.rds")
+
+narp <- ggplot(data = masternar, aes(x = start_date, y=actscor)) + geom_point(data = masternar, aes(x = start_date, y = rank, color = "Popularity", size = actmem)) + geom_smooth(method = "lm", aes(x = start_date, y = rank, color = "Popularity"))  + labs(size = "Number of Users Providing Feedback", color = "Anime Metric", x = "Year of Anime Release", y = "Rank and Popularity", title = "Change in Rank and Popularity of Franchise Anime Productions", subtitle = "Based on Compiled User Feedback on MyAnimeList from 2016-2017") 
+
+write_rds(narp, "images/narp.rds")
+```
+<br /> Sources: Raw anime information database processed by ["rfordatascience"](https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-04-23/tidy_anime.csv) and a CSV file of anime recommendation ratings on [Kaggle](https://www.kaggle.com/CooperUnion/anime-recommendations-database/data).
+
+Being able to reveal such trends within other popular anime can be a powerful tool to see which sectors of the anime audience these series are currently appealing to, and predict ways that the plot and content of anime might be changed to best cater to shifting interests and marketing groups.
+
+
+### Sources
+My data includes three datasets. One is a raw csv file processed by “rfordatascience” which compiles the raw informational categories of anime series on MyAnimeList. This provides the basic background info about almost every anime series I could hope to analyze, giving key filters such as producers, genre, studio, number of episodes, airing date, duration, and date of premiere.
+
+My second and third databases are CSV files of anime recommendation ratings on Kaggle. The first of these is scraped from user preference data from 73,516 anime networking site users on 12,294 anime titles, including movie titles instead of only multi-episode series. This contains a broader range of users and standardizes rantings on a 10 point scale across different anime review sites. My third database is compiled from 2006-2015 anime reviews from Anime News Network, a major anime industry news website which reaches audiences from Canada, Australia, U.S., and Southeast Asia. 
+
+URLs: Raw anime information database processed by ["rfordatascience"](https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-04-23/tidy_anime.csv)
+CSV file of anime recommendation ratings on [Kaggle:](https://www.kaggle.com/CooperUnion/anime-recommendations-database/data). 
+A full recommendation set from Anime News Network: [Kaggle](https://www.kaggle.com/canggih/anime-data-score-staff-synopsis-and-genre#dataanime.csv)
+
+
+### Acknowledgements
+Major thanks to Canggih P Wibowo, CooperUnion, and MyAnimeList for compiling the informational and review data. 
+
+A link to the Github repository can be found [here]("https://github.com/wminjue/Milestone_5.git").
+
+```{r bleach, echo = FALSE}
+
+#Similar process for Bleach
+
+blea <- comments %>%
+  select(name, episodes, rating, members) %>%
+  dplyr::filter(grepl('Bleach', name))
+
+rawanimblea <- rawanim %>%
+  dplyr::filter(grepl('Bleach', name)) %>%
+  distinct(name, .keep_all = TRUE) %>%
+  select(name, episodes, start_date, score, scored_by, rank, popularity)
+
+
+masterblea <- merge(blea, rawanimblea, by.rawanimblea = "name") %>%
+  arrange(start_date)
+
+masterblea$actmem <- ifelse(
+  (
+    (masterblea$scored_by > masterblea$members)
+  ),
+  masterblea$scored_by,
+  masterblea$members
+)
+
+masterblea$actscor <- ifelse(
+  (
+    (masterblea$scored_by > masterblea$members)
+  ),
+  masterblea$score,
+  masterblea$rating
+)
+
+masterblea
+```
+
+```{r bleachrun, echo= FALSE, message= FALSE}
+blear <- ggplot(data = masterblea, aes(x= start_date, y=actscor)) + ylim(0, 10) + geom_point(aes(x = start_date, y = actscor, color = "Score (1-10 Scale)", size = actmem)) + geom_smooth(method = "lm", aes(x = start_date, y = actscor, color = "Score (1-10 Scale)")) + labs(size = "Number of Users Providing Feedback", color = "Anime Metric", x = "Year of Anime Release", y = "Score out of 10", title = "Change in Rank of Franchise Anime Productions", subtitle = "Based on Compiled User Feedback on MyAnimeList from 2016-2017") 
+
+write_rds(blear, "images/blear.rds")
+
+bleap <- ggplot(data = masterblea, aes(x = start_date, y=actscor)) + geom_point(aes(x = start_date, y = rank, color = "Popularity", size = actmem)) + geom_smooth(data = masterblea, method = "lm", aes(x = start_date, y = rank, color = "Popularity"))  + labs(size = "Number of Users Providing Feedback", color = "Anime Metric", x = "Year of Anime Release", y = "Rank and Popularity", title = "Change in Rank and Popularity of Franchise Anime Productions", subtitle = "Based on Compiled User Feedback on MyAnimeList from 2016-2017") 
+
+write_rds(bleap, "images/bleap.rds")
+```
+
+```{r gintama, echo = FALSE}
+# Similar for Gin Tama
+gintam <- comments %>%
+  select(name, episodes, rating, members) %>%
+  dplyr::filter(grepl('Gintama', name))
+
+
+rawanimgintam <- rawanim %>%
+  dplyr::filter(grepl('Gintama', name)) %>%
+  distinct(name, .keep_all = TRUE) %>%
+  select(name, episodes, start_date, score, scored_by, rank, popularity)
+
+
+mastergintam <- merge(gintam, rawanimgintam, by.rawanimgintam = "name") %>%
+  arrange(start_date)
+
+
+mastergintam$actmem <- ifelse(
+  (
+    (mastergintam$scored_by > mastergintam$members)
+  ),
+  mastergintam$scored_by,
+  mastergintam$members
+)
+
+mastergintam$actscor <- ifelse(
+  (
+    (mastergintam$scored_by > mastergintam$members)
+  ),
+  mastergintam$score,
+  mastergintam$rating
+)
+
+mastergintam
+```
+
+```{r ginrun, echo= FALSE, message= FALSE}
+gintamr <- ggplot(data = mastergintam, aes(x= start_date, y=actscor)) + ylim(0, 10) + geom_point(aes(x = start_date, y = actscor, color = "Score (1-10 Scale)", size = actmem)) + geom_smooth(method = "lm", aes(x = start_date, y = actscor, color = "Score (1-10 Scale)")) + labs(size = "Number of Users Providing Feedback", color = "Anime Metric", x = "Year of Anime Release", y = "Score out of 10", title = "Change in Rank of Franchise Anime Productions", subtitle = "Based on Compiled User Feedback on MyAnimeList from 2016-2017") 
+
+write_rds(gintamr, "images/gintamr.rds")
+
+gintamp <- ggplot(data = mastergintam, aes(x = start_date, y=actscor)) + geom_point(aes(x = start_date, y = rank, color = "Popularity", size = actmem)) + geom_smooth(method = "lm", aes(x = start_date, y = rank, color = "Popularity"))  + labs(size = "Number of Users Providing Feedback", color = "Anime Metric", x = "Year of Anime Release", y = "Rank and Popularity", title = "Change in Rank and Popularity of Franchise Anime Productions", subtitle = "Based on Compiled User Feedback on MyAnimeList from 2016-2017") 
+
+write_rds(gintamp, "images/gintamp.rds") 
+```
+
+```{r fma, echo = FALSE}
+# Similar for Gin Tama
+fma <- comments %>%
+  select(name, episodes, rating, members) %>%
+  dplyr::filter(grepl('Fullmetal', name))
+
+
+rawanimfma <- rawanim %>%
+  dplyr::filter(grepl('Fullmetal', name)) %>%
+  distinct(name, .keep_all = TRUE) %>%
+  select(name, episodes, start_date, score, scored_by, rank, popularity)
+
+
+masterfma <- merge(fma, rawanimfma, by.rawanimfma = "name") %>%
+  arrange(start_date)
+
+
+masterfma$actmem <- ifelse(
+  (
+    (masterfma$scored_by > masterfma$members)
+  ),
+  masterfma$scored_by,
+  masterfma$members
+)
+
+masterfma$actscor <- ifelse(
+  (
+    (masterfma$scored_by > masterfma$members)
+  ),
+  masterfma$score,
+  masterfma$rating
+)
+
+masterfma
+```
+
+```{r fmarun, echo= FALSE, message= FALSE}
+fmar <- ggplot(data = masterfma, aes(x= start_date, y=actscor)) + ylim(0, 10) + geom_point(aes(x = start_date, y = actscor, color = "Score (1-10 Scale)", size = actmem)) + geom_smooth(method = "lm", aes(x = start_date, y = actscor, color = "Score (1-10 Scale)")) + labs(size = "Number of Users Providing Feedback", color = "Anime Metric", x = "Year of Anime Release", y = "Score out of 10", title = "Change in Rank of Franchise Anime Productions", subtitle = "Based on Compiled User Feedback on MyAnimeList from 2016-2017") 
+
+write_rds(fmar, "images/fmar.rds")
+
+fmap <- ggplot(data = masterfma, aes(x = start_date, y=actscor)) + geom_point(aes(x = start_date, y = rank, color = "Popularity", size = actmem)) + geom_smooth(method = "lm", aes(x = start_date, y = rank, color = "Popularity"))  + labs(size = "Number of Users Providing Feedback", color = "Anime Metric", x = "Year of Anime Release", y = "Rank and Popularity", title = "Change in Rank and Popularity of Franchise Anime Productions", subtitle = "Based on Compiled User Feedback on MyAnimeList from 2016-2017") 
+
+write_rds(fmap, "images/fmap.rds") 
+```
