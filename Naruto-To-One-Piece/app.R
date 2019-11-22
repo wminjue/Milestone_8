@@ -28,7 +28,11 @@ ui <- fluidPage(
       sidebarPanel((
         selectInput("anime", "Anime", anime_names))
       ),
-      mainPanel(plotOutput("plot"))
+      mainPanel(plotOutput("plot")),
+      sidebarPanel((
+        selectInput("anime1", "Anime", anime_names)
+      )),
+      mainPanel(plotOutput("plot1"))
     ),
     tabPanel(
       "Model Explanations"
@@ -56,6 +60,16 @@ server <- function(input, output, session) {
            "Gintama" = gintamr,
            "Fullmetal" = fmar,
            "Keroro" = keroror
+    )
+  })
+  
+  data_input2 <- reactive({
+    switch(input$anime1,
+           "Naruto" = narp, 
+           "Bleach" = bleap,
+           "Gintama" = gintamp,
+           "Fullmetal" = fmap,
+           "Keroro" = kerorop
     )
     
   })
@@ -160,6 +174,8 @@ server <- function(input, output, session) {
   })
   
   output$plot <- renderPlot(data_input())
+  
+  output$plot1 <- renderPlot(data_input2())
 }
 
 shinyApp(ui, server)

@@ -110,7 +110,7 @@ narr <- ggplot(data = masternar, aes(x= start_date, y=actscor)) + ylim(0, 10) + 
 
 write_rds(narr, "images/narr.rds")
 
-narp <- ggplot(data = masternar, aes(x = start_date, y=actscor)) + geom_point(data = masternar, aes(x = start_date, y = rank, color = "Popularity", size = actmem)) + geom_smooth(method = "lm", aes(x = start_date, y = rank, color = "Popularity"))  + labs(size = "Number of Users Providing Feedback", color = "Anime Metric", x = "Year of Anime Release", y = "Rank and Popularity", title = "Change in Rank and Popularity of Franchise Anime Productions", subtitle = "Based on Compiled User Feedback on MyAnimeList from 2016-2017") 
+narp <- ggplot(data = masternar, aes(x = start_date, y=actscor)) + geom_point(data = masternar, aes(x = start_date, y = rank, color = "Popularity", size = actmem)) + geom_smooth(method = "lm", aes(x = start_date, y = rank, color = "Popularity"))  + labs(size = "Number of Users Providing Feedback", color = "Anime Metric", x = "Year of Anime Release", y = "Popularity", title = "Change in Popularity of Franchise Anime Productions", subtitle = "Based on Compiled User Feedback on MyAnimeList from 2016-2017") 
 
 write_rds(narp, "images/narp.rds")
 ```
@@ -175,7 +175,7 @@ blear <- ggplot(data = masterblea, aes(x= start_date, y=actscor)) + ylim(0, 10) 
 
 write_rds(blear, "images/blear.rds")
 
-bleap <- ggplot(data = masterblea, aes(x = start_date, y=actscor)) + geom_point(aes(x = start_date, y = rank, color = "Popularity", size = actmem)) + geom_smooth(data = masterblea, method = "lm", aes(x = start_date, y = rank, color = "Popularity"))  + labs(size = "Number of Users Providing Feedback", color = "Anime Metric", x = "Year of Anime Release", y = "Rank and Popularity", title = "Change in Rank and Popularity of Franchise Anime Productions", subtitle = "Based on Compiled User Feedback on MyAnimeList from 2016-2017") 
+bleap <- ggplot(data = masterblea, aes(x = start_date, y=actscor)) + geom_point(aes(x = start_date, y = rank, color = "Popularity", size = actmem)) + geom_smooth(data = masterblea, method = "lm", aes(x = start_date, y = rank, color = "Popularity"))  + labs(size = "Number of Users Providing Feedback", color = "Anime Metric", x = "Year of Anime Release", y = "Popularity", title = "Change in Popularity of Franchise Anime Productions", subtitle = "Based on Compiled User Feedback on MyAnimeList from 2016-2017") 
 
 write_rds(bleap, "images/bleap.rds")
 ```
@@ -221,7 +221,7 @@ gintamr <- ggplot(data = mastergintam, aes(x= start_date, y=actscor)) + ylim(0, 
 
 write_rds(gintamr, "images/gintamr.rds")
 
-gintamp <- ggplot(data = mastergintam, aes(x = start_date, y=actscor)) + geom_point(aes(x = start_date, y = rank, color = "Popularity", size = actmem)) + geom_smooth(method = "lm", aes(x = start_date, y = rank, color = "Popularity"))  + labs(size = "Number of Users Providing Feedback", color = "Anime Metric", x = "Year of Anime Release", y = "Rank and Popularity", title = "Change in Rank and Popularity of Franchise Anime Productions", subtitle = "Based on Compiled User Feedback on MyAnimeList from 2016-2017") 
+gintamp <- ggplot(data = mastergintam, aes(x = start_date, y=actscor)) + geom_point(aes(x = start_date, y = rank, color = "Popularity", size = actmem)) + geom_smooth(method = "lm", aes(x = start_date, y = rank, color = "Popularity"))  + labs(size = "Number of Users Providing Feedback", color = "Anime Metric", x = "Year of Anime Release", y = "Popularity", title = "Change in Popularity of Franchise Anime Productions", subtitle = "Based on Compiled User Feedback on MyAnimeList from 2016-2017") 
 
 write_rds(gintamp, "images/gintamp.rds") 
 ```
@@ -267,7 +267,7 @@ fmar <- ggplot(data = masterfma, aes(x= start_date, y=actscor)) + ylim(0, 10) + 
 
 write_rds(fmar, "images/fmar.rds")
 
-fmap <- ggplot(data = masterfma, aes(x = start_date, y=actscor)) + geom_point(aes(x = start_date, y = rank, color = "Popularity", size = actmem)) + geom_smooth(method = "lm", aes(x = start_date, y = rank, color = "Popularity"))  + labs(size = "Number of Users Providing Feedback", color = "Anime Metric", x = "Year of Anime Release", y = "Rank and Popularity", title = "Change in Rank and Popularity of Franchise Anime Productions", subtitle = "Based on Compiled User Feedback on MyAnimeList from 2016-2017") 
+fmap <- ggplot(data = masterfma, aes(x = start_date, y=actscor)) + geom_point(aes(x = start_date, y = rank, color = "Popularity", size = actmem)) + geom_smooth(method = "lm", aes(x = start_date, y = rank, color = "Popularity"))  + labs(size = "Number of Users Providing Feedback", color = "Anime Metric", x = "Year of Anime Release", y = "Popularity", title = "Change in Popularity of Franchise Anime Productions", subtitle = "Based on Compiled User Feedback on MyAnimeList from 2016-2017") 
 
 write_rds(fmap, "images/fmap.rds") 
 ```
@@ -314,7 +314,7 @@ keroror <- ggplot(data = masterkeroro, aes(x= start_date, y=actscor)) + ylim(0, 
 
 write_rds(keroror, "images/keroror.rds")
 
-kerorop <- ggplot(data = masterkeroro, aes(x = start_date, y=actscor)) + geom_point(aes(x = start_date, y = rank, color = "Popularity", size = actmem)) + geom_smooth(method = "lm", aes(x = start_date, y = rank, color = "Popularity"))  + labs(size = "Number of Users Providing Feedback", color = "Anime Metric", x = "Year of Anime Release", y = "Rank and Popularity", title = "Change in Rank and Popularity of Franchise Anime Productions", subtitle = "Based on Compiled User Feedback on MyAnimeList from 2016-2017") 
+kerorop <- ggplot(data = masterkeroro, aes(x = start_date, y=actscor)) + geom_point(aes(x = start_date, y = rank, color = "Popularity", size = actmem)) + geom_smooth(method = "lm", aes(x = start_date, y = rank, color = "Popularity"))  + labs(size = "Number of Users Providing Feedback", color = "Anime Metric", x = "Year of Anime Release", y = "Popularity", title = "Change in Popularity of Franchise Anime Productions", subtitle = "Based on Compiled User Feedback on MyAnimeList from 2016-2017") 
 
 write_rds(kerorop, "images/kerorop.rds") 
 ```
