@@ -25,12 +25,13 @@ ui <- fluidPage(
       "Ranking and Popularity Trends",
       titlePanel("Plotted Score Correlations"),
       br(),
+      htmlOutput("interp"),
       sidebarPanel((
-        selectInput("anime", "Anime", anime_names))
+        selectInput("anime", "Anime Score out of Ten", anime_names))
       ),
       mainPanel(plotOutput("plot")),
       sidebarPanel((
-        selectInput("anime1", "Anime", anime_names)
+        selectInput("anime1", "Anime Popularity", anime_names)
       )),
       mainPanel(plotOutput("plot1"))
     ),
@@ -73,6 +74,21 @@ server <- function(input, output, session) {
     )
     
   })
+
+  output$interp <- renderUI({
+    HTML("<b><font size = 6> Turn in the Tides</font></b> <br>
+         Looking at these graphs of rank and popularity trends for ten (five more datasets forthcoming!) 
+         of the most enduring, still-running anime franchises can reveal important factors about the fan
+         base, changes in audience consumption, and overall approval of new spinoffs. For example,
+         looking at the ranking and popularity graphs of Naruto franchise productions organized by release 
+         date, for example, shows that scores of Naruto productions initally dipped in the late 2000s 
+         but is steadily increasing, while the overall score (out of ten) has decreased when compared to 
+         all other anime productions. The more recent productions are attracted a smaller group of dedicated 
+         fans (as measured by voting users), showing that the nature of the show has perhaps changed — no 
+         longer a massive cult following, but something that caters more to a specific group of audiences 
+         that have petered off from the original Shippuden series. 
+         <br> <br>
+         ")})
   
   output$intro <- renderUI({
     HTML("<b><font size=6> Anime: Rise of a Global Phenomenon</font></b>
@@ -124,7 +140,10 @@ server <- function(input, output, session) {
                              Die-hard fans who have suffered through the entire series specifically square off hundreds of 
                              episodes as to-be-avoided &#8220filler&#8221 fluff to newcomers, and a sizable portion of episode 
                              reviews feature negative commentary such as &#8220repetitive...poor AI&#8221, &#8220painfully 
-                             long&#8221, and &#8220overrated&#8221. 
+                             long&#8221, and &#8220overrated&#8221. Here is where analysis of anime trends over release years 
+                             come into light. A quick comparison of audience following and preferences of the same franchise 
+                             over many years allows one to pinpoint when an audience tires from content, the effectiveness 
+                             of new spinoffs, and hidden details about how much future productions of a show is worth investing in. 
                             <br><br>")
   })
   

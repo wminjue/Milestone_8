@@ -318,3 +318,21 @@ kerorop <- ggplot(data = masterkeroro, aes(x = start_date, y=actscor)) + geom_po
 
 write_rds(kerorop, "images/kerorop.rds") 
 ```
+
+```{r binding, include = FALSE}
+
+#I made a dataset combining all of the popular anime franchise data to look at overall trends in popularity over the years -- maybe there is a collective correlation?
+
+total <- rbind(masterblea, masterfma, mastergintam, masterkeroro, masternar)
+
+#I plot this data with a linear model and see that there is actually a negative trend, suggesting spinoff productions are actually gaining traction with audiences despite the heavy weight pulling of the original franchise popularity!
+
+totality <- ggplot(data = total, aes(x = start_date, y=actscor)) + geom_point(aes(x = start_date, y = rank, size = actmem)) + geom_smooth(method = "lm", aes(x = start_date, y = rank))  + labs(size = "Number of Users Providing Feedback", color = "Anime Metric", x = "Year of Anime Release", y = "Popularity", title = "Correlation between Year Released and Popularity of Anime Productions", subtitle = "Based on Compiled User Feedback on MyAnimeList and Anime News Network 2016-2017") 
+
+write_rds(totality, "images/totality.rds")
+
+# Using an lm model, I find that indeed while the intercept is around 5000, which is not terrible given there are over 70,000 anime in my combined master dataset, the coefficient is negative, suggesting as the start date grows closer to modern time, audience enthusiasm for spinoff franchises have increased, leading to higher (or a lower number) popularity rank. 
+analysis <- lm(formula = rank ~ start_date, data = total)
+analysis
+```
+
