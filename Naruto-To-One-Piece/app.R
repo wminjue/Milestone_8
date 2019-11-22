@@ -217,7 +217,7 @@ server <- function(input, output, session) {
     tagList("URLs: Raw anime information database processed by", url1)
   })
   
-  url2 <- a("https://about.twitter.com/en_us/values/elections-integrity.html#data", href = " https://about.twitter.com/en_us/values/elections-integrity.html#data")
+  url2 <- a("https://www.kaggle.com/CooperUnion/anime-recommendations-database/data", href = " https://about.twitter.com/en_us/values/elections-integrity.html#data")
   
   output$tab2 <- renderUI({
     tagList("Data source:", url2)
