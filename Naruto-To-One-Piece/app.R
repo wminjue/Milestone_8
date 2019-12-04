@@ -18,11 +18,16 @@ blear <- read_rds("blear.rds")
 bleap <- read_rds("bleap.rds")
 keroror <- read_rds("keroror.rds")
 kerorop <- read_rds("kerorop.rds")
+oner <- read_rds("oner.rds")
+onep <- read_rds("onep.rds")
+cr <- read_rds("cr.rds")
+cp <- read_rds("cp.rds")
 totality <- read_rds("totality.rds")
+
 
 #Create list of anime for users to scroll through on the first tab
 
-anime_names <- c("Naruto", "Bleach", "Gintama", "Fullmetal", "Keroro")
+anime_names <- c("Naruto", "Bleach", "Gintama", "Fullmetal", "Keroro", "One Piece", "Detective Conan")
 
 #Provide two scrolls on the front page so people can cross compare
 #popularity and rank trends between different popular anime simultaneously,
@@ -64,6 +69,7 @@ ui <- fluidPage(
       htmlOutput("source"),
       uiOutput("tab"),
       uiOutput("tab2"),
+      uiOutput("tab3"),
       htmlOutput("bio")
     )
   )
@@ -81,7 +87,9 @@ server <- function(input, output, session) {
            "Bleach" = blear,
            "Gintama" = gintamr,
            "Fullmetal" = fmar,
-           "Keroro" = keroror
+           "Keroro" = keroror,
+           "One Piece" = oner,
+           "Detective Conan" = cr
     )
   })
   
@@ -91,14 +99,16 @@ server <- function(input, output, session) {
            "Bleach" = bleap,
            "Gintama" = gintamp,
            "Fullmetal" = fmap,
-           "Keroro" = kerorop
+           "Keroro" = kerorop,
+           "One Piece" = onep,
+           "Detective Conan" = narp
     )
     
   })
 
   output$interp <- renderUI({
     HTML("<b><font size = 6> Turn in the Tides</font></b> <br>
-         Looking at these graphs of rank and popularity trends for ten (five more datasets forthcoming!) 
+         Looking at these graphs of rank and popularity trends for five 
          of the most enduring, still-running anime franchises can reveal important factors about the fan
          base, changes in audience consumption, and overall approval of new spinoffs. For example,
          looking at the ranking and popularity graphs of Naruto franchise productions organized by release 
@@ -137,10 +147,10 @@ server <- function(input, output, session) {
                              second  64-episode reboot of the original Fullmetal adaptaion, boasts over a million 
                              members involved in forums, which doesn't even account for the amount of visiting 
                              members who simply leave ratings. This project seeks to analyze trends across years 
-                             in ranking, popularity, audience size, and overall quality ratings of the 10 most 
+                             in ranking, popularity, audience size, and overall quality ratings of the 7 most 
                              popular long-running (and still running!) anime shows in history. These include Naruto, 
-                             Bleach, Fullmetal Alchemist, Keroro Gunsō, Gin Tama, One Piece, Detective Conan (Case 
-                             Closed), Crayon Shin-Chan, Dragon Ball Z, and Sazae-san. Ranging from 120 to over 1600 
+                             Bleach, Fullmetal Alchemist, Keroro Gunsō, Gin Tama, One Piece, and Detective Conan (Case 
+                             Closed). Ranging from 120 to over 1600 
                              episodes each, these series and their offshoots have evolved over the past decade, and 
                              data gathered from various Anime review sites and new sources give a comprehensive 
                              overview of how popular ratings has changed from 2006-2016.
@@ -211,16 +221,22 @@ server <- function(input, output, session) {
   })
   
 
-  url1 <- a("Kotaku Australia", href = "https://www.kotaku.com.au/2014/11/naruto-is-fun-and-action-filled-but-its-also-repetitive-and-painfully-long/")
+  url1 <- a("rfordatascience", href = "https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-04-23/tidy_anime.csv")
   
   output$tab <- renderUI({
     tagList("URLs: Raw anime information database processed by", url1)
   })
   
-  url2 <- a("https://www.kaggle.com/CooperUnion/anime-recommendations-database/data", href = " https://about.twitter.com/en_us/values/elections-integrity.html#data")
+  url2 <- a("https://www.kaggle.com/CooperUnion/anime-recommendations-database/data", href = " https://www.kaggle.com/CooperUnion/anime-recommendations-database/data")
   
   output$tab2 <- renderUI({
-    tagList("Data source:", url2)
+    tagList("Anime recommendations:", url2)
+  })
+  
+  url3 <- a("https://www.kaggle.com/canggih/anime-data-score-staff-synopsis-and-genre#dataanime.csv", href = "https://www.kaggle.com/canggih/anime-data-score-staff-synopsis-and-genre#dataanime.csv")
+  
+  output$tab3 <- renderUI({
+    tagList("A full recommendation set from Anime News Network:", url2)
   })
   
   

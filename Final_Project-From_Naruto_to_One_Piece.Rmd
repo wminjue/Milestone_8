@@ -319,11 +319,104 @@ kerorop <- ggplot(data = masterkeroro, aes(x = start_date, y=actscor)) + geom_po
 write_rds(kerorop, "images/kerorop.rds") 
 ```
 
+
+```{r one, echo = FALSE, message= FALSE, include= FALSE}
+# Similar for Gin Tama
+one <- comments %>%
+  select(name, episodes, rating, members) %>%
+  dplyr::filter(grepl('One Piece', name))
+
+
+rawanimone <- rawanim %>%
+  dplyr::filter(grepl('One Piece', name)) %>%
+  distinct(name, .keep_all = TRUE) %>%
+  select(name, episodes, start_date, score, scored_by, rank, popularity)
+
+
+masterone <- merge(one, rawanimone, by.rawanimone = "name") %>%
+  arrange(start_date)
+
+
+masterone$actmem <- ifelse(
+  (
+    (masterone$scored_by > masterone$members)
+  ),
+  masterone$scored_by,
+  masterone$members
+)
+
+masterone$actscor <- ifelse(
+  (
+    (masterone$scored_by > masterone$members)
+  ),
+  masterone$score,
+  masterone$rating
+)
+
+masterone
+```
+
+```{r onerun, echo= FALSE, include= FALSE}
+oner <- ggplot(data = masterone, aes(x= start_date, y=actscor)) + ylim(0, 10) + geom_point(aes(x = start_date, y = actscor, color = "Score (1-10 Scale)", size = actmem)) + geom_smooth(method = "lm", aes(x = start_date, y = actscor, color = "Score (1-10 Scale)")) + labs(size = "Number of Users Providing Feedback", color = "Anime Metric", x = "Year of Anime Release", y = "Score out of 10", title = "Change in Rank of Franchise Anime Productions", subtitle = "Based on Compiled User Feedback on MyAnimeList from 2016-2017") 
+
+write_rds(oner, "images/oner.rds")
+
+onep <- ggplot(data = masterone, aes(x = start_date, y=actscor)) + geom_point(aes(x = start_date, y = rank, color = "Popularity", size = actmem)) + geom_smooth(method = "lm", aes(x = start_date, y = rank, color = "Popularity"))  + labs(size = "Number of Users Providing Feedback", color = "Anime Metric", x = "Year of Anime Release", y = "Popularity", title = "Change in Popularity of Franchise Anime Productions", subtitle = "Based on Compiled User Feedback on MyAnimeList from 2016-2017") 
+
+write_rds(onep, "images/onep.rds") 
+```
+
+```{r c, echo = FALSE, message= FALSE, include= FALSE}
+# Similar for Gin Tama
+c <- comments %>%
+  select(name, episodes, rating, members) %>%
+  dplyr::filter(grepl('Detective Conan', name))
+
+
+rawanimc <- rawanim %>%
+  dplyr::filter(grepl('Detective Conan', name)) %>%
+  distinct(name, .keep_all = TRUE) %>%
+  select(name, episodes, start_date, score, scored_by, rank, popularity)
+
+
+masterc <- merge(one, rawanimc, by.rawanimc = "name") %>%
+  arrange(start_date)
+
+
+masterc$actmem <- ifelse(
+  (
+    (masterc$scored_by > masterc$members)
+  ),
+  masterc$scored_by,
+  masterc$members
+)
+
+masterc$actscor <- ifelse(
+  (
+    (masterc$scored_by > masterc$members)
+  ),
+  masterc$score,
+  masterc$rating
+)
+
+masterc
+```
+
+```{r crun, echo= FALSE, include= FALSE}
+cr <- ggplot(data = masterc, aes(x= start_date, y=actscor)) + ylim(0, 10) + geom_point(aes(x = start_date, y = actscor, color = "Score (1-10 Scale)", size = actmem)) + geom_smooth(method = "lm", aes(x = start_date, y = actscor, color = "Score (1-10 Scale)")) + labs(size = "Number of Users Providing Feedback", color = "Anime Metric", x = "Year of Anime Release", y = "Score out of 10", title = "Change in Rank of Franchise Anime Productions", subtitle = "Based on Compiled User Feedback on MyAnimeList from 2016-2017") 
+
+write_rds(oner, "images/cr.rds")
+
+cp <- ggplot(data = masterc, aes(x = start_date, y=actscor)) + geom_point(aes(x = start_date, y = rank, color = "Popularity", size = actmem)) + geom_smooth(method = "lm", aes(x = start_date, y = rank, color = "Popularity"))  + labs(size = "Number of Users Providing Feedback", color = "Anime Metric", x = "Year of Anime Release", y = "Popularity", title = "Change in Popularity of Franchise Anime Productions", subtitle = "Based on Compiled User Feedback on MyAnimeList from 2016-2017") 
+
+write_rds(cp, "images/cp.rds") 
+```
+
 ```{r binding, echo = FALSE}
 
 #I made a dataset combining all of the popular anime franchise data to look at overall trends in popularity over the years -- maybe there is a collective correlation?
 
-total <- rbind(masterblea, masterfma, mastergintam, masterkeroro, masternar)
+total <- rbind(masterblea, masterfma, mastergintam, masterkeroro, masternar, masterone, masterc)
 
 #I plot this data with a linear model and see that there is actually a negative trend, suggesting spinoff productions are actually gaining traction with audiences despite the heavy weight pulling of the original franchise popularity!
 
